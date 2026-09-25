@@ -21,7 +21,7 @@ const detectorWidth = 50;
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
-const particleFieldWidth = 10;
+const particleFieldWidth = 100;
 
 const particleFieldX = windowWidth / 2 - particleFieldWidth;
 const particleFieldY = 0;
@@ -53,8 +53,12 @@ function getParticleRightEdgeX(particleX, particleWidth) {
 	return particleX + particleWidth;
 }
 
-function areParticleEdgesOverlappingEachother(particleOneX, particleTwoLeftEdgeX, particleTwoRightEdgeX) {
+function areParticleEdgesOverlapping(particleOneX, particleTwoLeftEdgeX, particleTwoRightEdgeX) {
 	return ((particleOneX >= particleTwoLeftEdgeX) && (particleOneX <= particleTwoRightEdgeX));
+}
+
+function isNotOverlapping(particleOneLeftEdgeX, particleOneRightEdgeX, particleTwoLeftX, particleTwoRightX) {
+	return !areParticleEdgesOverlapping(particleOneLeftEdgeX, particleTwoLeftX, particleTwoRightX) && !areParticleEdgesOverlapping(particleOneRightEdgeX, particleTwoLeftX, particleTwoRightX);
 }
 
 function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth) {
@@ -66,8 +70,14 @@ function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, parti
 	const particleFieldLeftX = getParticleLeftEdgeX(particleFieldX);
 	const particleFieldRightX = getParticleRightEdgeX(particleFieldX, particleFieldWidth);
 
-	if (!areParticleEdgesOverlappingEachother(detectorLeftEdgeX, particleFieldLeftX, particleFieldRightX) && !areParticleEdgesOverlappingEachother(detectorRightEdgeX, particleFieldLeftX, particleFieldRightX)) {
-		particlesOverlapping = false;
+	if (particleFieldWidth >= detectorWidth) {
+		if (isNotOverlapping(detectorLeftEdgeX, detectorRightEdgeX, particleFieldLeftX, particleFieldRightX)) {
+			particlesOverlapping = false;
+		}
+	} else {
+		if (isNotOverlapping(particleFieldLeftX, particleFieldRightX, detectorLeftEdgeX, detectorRightEdgeX)) {
+			particlesOverlapping = false;
+		}
 	}
 
 	return particlesOverlapping;
@@ -86,11 +96,7 @@ function update() {
 		detectorX--;
 	}
 
-	if (particleFieldWidth >= detectorWidth) {
-		areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth);
-	} else {
-		areParticlesOverlappingEachother = areParticlesOverlapping(particleFieldX, particleFieldWidth, detectorX, detectorWidth);
-	}
+	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth);
 }
 
 function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
