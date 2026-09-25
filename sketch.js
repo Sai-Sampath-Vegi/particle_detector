@@ -21,7 +21,7 @@ const detectorWidth = 50;
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
-const particleFieldWidth = 100;
+const particleFieldWidth = 10;
 
 const particleFieldX = windowWidth / 2 - particleFieldWidth;
 const particleFieldY = 0;
@@ -86,7 +86,11 @@ function update() {
 		detectorX--;
 	}
 
-	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth);
+	if (particleFieldWidth >= detectorWidth) {
+		areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth);
+	} else {
+		areParticlesOverlappingEachother = areParticlesOverlapping(particleFieldX, particleFieldWidth, detectorX, detectorWidth);
+	}
 }
 
 function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
