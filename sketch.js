@@ -14,7 +14,6 @@ function setup() {
 }
 
 let detectorX = 0;
-const detectorY = 0;
 
 const detectorWidth = 50;
 
@@ -24,7 +23,6 @@ const SCAN_RIGHT = "SCAN RIGHT REGION";
 const particleFieldWidth = 100;
 
 const particleFieldX = windowWidth / 2 - particleFieldWidth;
-const particleFieldY = 0;
 
 let detectorMode = SCAN_RIGHT;
 let areParticlesOverlappingEachother = false;
@@ -104,6 +102,9 @@ function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
 }
 
 function draw() {
+	const detectorY = 0;
+	const particleFieldY = 0;
+
 	r.BeginDrawing();
 
 	r.ClearBackground(r.BLACK);
