@@ -4,8 +4,6 @@ const windowWidth = 800;
 const windowHeight = 600;
 const windowTitle = "Particle Detector";
 
-const detectorWidth = 50;
-
 const FPS = 60;
 
 function running() { return !r.WindowShouldClose(); }
@@ -18,10 +16,17 @@ function setup() {
 let detectorX = 0;
 const detectorY = 0;
 
+const detectorWidth = 50;
+
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
 let detectorMode = SCAN_RIGHT;
+
+const particleFieldX = 400;
+const particleFieldY = 0;
+
+const particleFieldWidth = 100;
 
 function hasDetectorReachedLeftEdge(detectorX, detectorMode) {
 	return ((detectorMode === SCAN_LEFT) && (detectorX === 0));
@@ -57,6 +62,9 @@ function draw() {
 	r.BeginDrawing();
 
 	r.ClearBackground(r.BLACK);
+
+	r.DrawRectangle(particleFieldX, particleFieldY, particleFieldWidth, windowHeight, r.BLUE);
+
 	r.DrawRectangle(detectorX, detectorY, detectorWidth, windowHeight, r.WHITE);
 
 	r.EndDrawing();
