@@ -21,12 +21,13 @@ const detectorWidth = 50;
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
-let detectorMode = SCAN_RIGHT;
+const particleFieldWidth = 100;
 
-const particleFieldX = 400;
+const particleFieldX = windowWidth / 2 - particleFieldWidth;
 const particleFieldY = 0;
 
-const particleFieldWidth = 100;
+let detectorMode = SCAN_RIGHT;
+let areParticlesOverlappingEachother = false;
 
 function hasDetectorReachedLeftEdge(detectorX, detectorMode) {
 	return ((detectorMode === SCAN_LEFT) && (detectorX === 0));
@@ -44,6 +45,34 @@ function hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detect
 	return hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) || hasDetectorReachedLeftEdge(detectorX, detectorMode);
 }
 
+function getParticleLeftEdgeX(particleX) {
+	return particleX;
+}
+
+function getParticleRightEdgeX(particleX, particleWidth) {
+	return particleX + particleWidth;
+}
+
+function areParticleEdgesOverlappingEachother(particleOneX, particleTwoLeftEdgeX, particleTwoRightEdgeX) {
+	return ((particleOneX >= particleTwoLeftEdgeX) && (particleOneX <= particleTwoRightEdgeX));
+}
+
+function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth) {
+	let particlesOverlapping = true;
+
+	const detectorLeftEdgeX = getParticleLeftEdgeX(detectorX);
+	const detectorRightEdgeX = getParticleRightEdgeX(detectorX, detectorWidth);
+
+	const particleFieldLeftX = getParticleLeftEdgeX(particleFieldX);
+	const particleFieldRightX = getParticleRightEdgeX(particleFieldX, particleFieldWidth);
+
+	if (!areParticleEdgesOverlappingEachother(detectorLeftEdgeX, particleFieldLeftX, particleFieldRightX) && !areParticleEdgesOverlappingEachother(detectorRightEdgeX, particleFieldLeftX, particleFieldRightX)) {
+		particlesOverlapping = false;
+	}
+
+	return particlesOverlapping;
+}
+
 function update() {
 	if (hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode)) {
 		detectorMode = getToggledDetectorMode(detectorMode);
@@ -56,6 +85,12 @@ function update() {
 	if (!hasDetectorReachedLeftEdge(detectorX, detectorMode) && detectorMode === SCAN_LEFT) {
 		detectorX--;
 	}
+
+	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth);
+}
+
+function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
+	return areParticlesOverlappingEachother ? r.RED : r.WHITE;
 }
 
 function draw() {
@@ -65,7 +100,7 @@ function draw() {
 
 	r.DrawRectangle(particleFieldX, particleFieldY, particleFieldWidth, windowHeight, r.BLUE);
 
-	r.DrawRectangle(detectorX, detectorY, detectorWidth, windowHeight, r.WHITE);
+	r.DrawRectangle(detectorX, detectorY, detectorWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother));
 
 	r.EndDrawing();
 }
