@@ -13,23 +13,31 @@ function setup() {
 	r.SetTargetFPS(FPS);
 }
 
-let detectorOneX = 0;
-let detectorTwoX = 0;
+function getHalf(x) { return x / 2; }
+
+const detectorOneLeftRangeX = 0;
+const detectorOneRightRangeX = getHalf(windowWidth);
+
+const detectorTwoLeftRangeX = getHalf(windowWidth);
+const detectorTwoRightRangeX = windowWidth;
+
+let detectorOneX = detectorOneLeftRangeX;
+let detectorTwoX = detectorTwoLeftRangeX;
 
 const detectorOneWidth = 50;
 const detectorTwoWidth = 50;
 
 const detectorOneSpeed = 1;
-const detectorTwoSpeed = 3;
+const detectorTwoSpeed = 2;
 
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
 const particleFieldOneWidth = 100;
-const particleFieldOneX = windowWidth / 2 - particleFieldOneWidth;
+const particleFieldOneX = getHalf(windowWidth) - particleFieldOneWidth;
 
 const particleFieldTwoWidth = 10;
-const particleFieldTwoX = windowWidth / 2 + particleFieldOneWidth;
+const particleFieldTwoX = getHalf(windowWidth) + particleFieldOneWidth;
 
 let detectorOneMode = SCAN_RIGHT;
 let detectorTwoMode = SCAN_RIGHT;
@@ -37,20 +45,20 @@ let detectorTwoMode = SCAN_RIGHT;
 let areParticlesOverlappingDetectorOne = false;
 let areParticlesOverlappingDetectorTwo = false;
 
-function hasDetectorReachedLeftEdge(detectorX, detectorMode, detectorSpeed) {
-	return ((detectorMode === SCAN_LEFT) && (detectorX <= detectorSpeed));
+function hasDetectorReachedLeftEdge(detectorX, detectorLeftRangeX, detectorMode, detectorSpeed) {
+	return ((detectorMode === SCAN_LEFT) && ((detectorX - detectorLeftRangeX) <= detectorSpeed));
 }
 
-function hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) {
-	return ((detectorMode === SCAN_RIGHT) && ((windowWidth - (detectorX + detectorWidth)) <= detectorSpeed));
+function hasDetectorReachedRightEdge(detectorX, detectorWidth, detectorRightRangeX, detectorMode, detectorSpeed) {
+	return ((detectorMode === SCAN_RIGHT) && ((detectorRightRangeX - (detectorX + detectorWidth)) <= detectorSpeed));
 }
 
 function getToggledDetectorMode(detectorMode) {
 	return detectorMode === SCAN_LEFT ? SCAN_RIGHT : SCAN_LEFT;
 }
 
-function hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) {
-	return hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) || hasDetectorReachedLeftEdge(detectorX, detectorMode, detectorSpeed);
+function hasDetectorReachedAnyEdge(detectorX, detectorWidth, detectorLeftRangeX, detectorRightRangeX, detectorMode, detectorSpeed) {
+	return hasDetectorReachedRightEdge(detectorX, detectorWidth, detectorRightRangeX, detectorMode, detectorSpeed) || hasDetectorReachedLeftEdge(detectorX, detectorLeftRangeX, detectorMode, detectorSpeed);
 }
 
 function getParticleLeftEdgeX(particleX) {
@@ -106,15 +114,15 @@ function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode, d
 }
 
 function update() {
-	if (hasDetectorReachedAnyEdge(detectorOneX, detectorOneWidth, windowWidth, detectorOneMode, detectorOneSpeed)) {
+	if (hasDetectorReachedAnyEdge(detectorOneX, detectorOneWidth, detectorOneLeftRangeX, detectorOneRightRangeX, detectorOneMode, detectorOneSpeed)) {
 		detectorOneMode = getToggledDetectorMode(detectorOneMode);
 	}
 
-	if (hasDetectorReachedAnyEdge(detectorTwoX, detectorTwoWidth, windowWidth, detectorTwoMode, detectorTwoSpeed)) {
+	if (hasDetectorReachedAnyEdge(detectorTwoX, detectorTwoWidth, detectorTwoLeftRangeX, detectorTwoRightRangeX, detectorTwoMode, detectorTwoSpeed)) {
 		detectorTwoMode = getToggledDetectorMode(detectorTwoMode);
 	}
 
-	detectorOneX = getDetectorNextX(detectorOneX, detectorOneWidth, windowWidth, detectorOneMode, detectorOneSpeed);
+	detectorOneX = getDetectorNextX(detectorOneX, detectorOneWidth, getHalf(windowWidth), detectorOneMode, detectorOneSpeed);
 	detectorTwoX = getDetectorNextX(detectorTwoX, detectorTwoWidth, windowWidth, detectorTwoMode, detectorTwoSpeed);
 
 	areParticlesOverlappingDetectorOne = areParticlesOverlapping(detectorOneX, detectorOneWidth, particleFieldOneX, particleFieldOneWidth) || areParticlesOverlapping(detectorOneX, detectorOneWidth, particleFieldTwoX, particleFieldTwoWidth);
