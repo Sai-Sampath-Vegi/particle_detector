@@ -20,9 +20,11 @@ const detectorWidth = 50;
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
-const particleFieldWidth = 100;
+const particleFieldOneWidth = 100;
+const particleFieldOneX = windowWidth / 2 - particleFieldOneWidth;
 
-const particleFieldX = windowWidth / 2 - particleFieldWidth;
+const particleFieldTwoWidth = 10;
+const particleFieldTwoX = windowWidth / 2 + particleFieldOneWidth;
 
 let detectorMode = SCAN_RIGHT;
 let areParticlesOverlappingEachother = false;
@@ -94,24 +96,34 @@ function update() {
 		detectorX--;
 	}
 
-	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth);
+	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldOneX, particleFieldOneWidth) || areParticlesOverlapping(detectorX, detectorWidth, particleFieldTwoX, particleFieldTwoWidth);
 }
 
 function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
 	return areParticlesOverlappingEachother ? r.RED : r.WHITE;
 }
 
-function draw() {
+function drawDetector() {
 	const detectorY = 0;
+	r.DrawRectangle(detectorX, detectorY, detectorWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother));
+}
+
+function drawParticleFields() {
 	const particleFieldY = 0;
 
+	r.DrawRectangle(particleFieldOneX, particleFieldY, particleFieldOneWidth, windowHeight, r.BLUE);
+
+	r.DrawRectangle(particleFieldTwoX, particleFieldY, particleFieldTwoWidth, windowHeight, r.BLUE);
+}
+
+function draw() {
 	r.BeginDrawing();
 
 	r.ClearBackground(r.BLACK);
 
-	r.DrawRectangle(particleFieldX, particleFieldY, particleFieldWidth, windowHeight, r.BLUE);
+	drawParticleFields();
 
-	r.DrawRectangle(detectorX, detectorY, detectorWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother));
+	drawDetector();
 
 	r.EndDrawing();
 }
