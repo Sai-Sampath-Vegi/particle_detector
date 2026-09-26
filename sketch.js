@@ -31,20 +31,20 @@ const particleFieldTwoX = windowWidth / 2 + particleFieldOneWidth;
 let detectorMode = SCAN_RIGHT;
 let areParticlesOverlappingEachother = false;
 
-function hasDetectorReachedLeftEdge(detectorX, detectorMode) {
-	return ((detectorMode === SCAN_LEFT) && (detectorX === 0));
+function hasDetectorReachedLeftEdge(detectorX, detectorMode, detectorSpeed) {
+	return ((detectorMode === SCAN_LEFT) && (detectorX <= detectorSpeed));
 }
 
-function hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) {
-	return ((detectorMode === SCAN_RIGHT) && ((detectorX + detectorWidth) === windowWidth));
+function hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) {
+	return ((detectorMode === SCAN_RIGHT) && ((windowWidth - (detectorX + detectorWidth)) <= detectorSpeed));
 }
 
 function getToggledDetectorMode(detectorMode) {
 	return detectorMode === SCAN_LEFT ? SCAN_RIGHT : SCAN_LEFT;
 }
 
-function hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode) {
-	return hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) || hasDetectorReachedLeftEdge(detectorX, detectorMode);
+function hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) {
+	return hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) || hasDetectorReachedLeftEdge(detectorX, detectorMode, detectorSpeed);
 }
 
 function getParticleLeftEdgeX(particleX) {
