@@ -13,11 +13,14 @@ function setup() {
 	r.SetTargetFPS(FPS);
 }
 
-let detectorX = 0;
+let detectorOneX = 0;
+let detectorTwoX = 0;
 
-const detectorWidth = 50;
+const detectorOneWidth = 50;
+const detectorTwoWidth = 50;
 
-const detectorSpeed = 1;
+const detectorOneSpeed = 1;
+const detectorTwoSpeed = 3;
 
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
@@ -28,8 +31,11 @@ const particleFieldOneX = windowWidth / 2 - particleFieldOneWidth;
 const particleFieldTwoWidth = 10;
 const particleFieldTwoX = windowWidth / 2 + particleFieldOneWidth;
 
-let detectorMode = SCAN_RIGHT;
-let areParticlesOverlappingEachother = false;
+let detectorOneMode = SCAN_RIGHT;
+let detectorTwoMode = SCAN_RIGHT;
+
+let areParticlesOverlappingDetectorOne = false;
+let areParticlesOverlappingDetectorTwo = false;
 
 function hasDetectorReachedLeftEdge(detectorX, detectorMode, detectorSpeed) {
 	return ((detectorMode === SCAN_LEFT) && (detectorX <= detectorSpeed));
@@ -85,7 +91,7 @@ function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, parti
 	return particlesOverlapping;
 }
 
-function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode) {
+function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed) {
 	let detectorNextX;
 
 	if (!hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) && detectorMode === SCAN_RIGHT) {
@@ -100,22 +106,31 @@ function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode) {
 }
 
 function update() {
-	if (hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed)) {
-		detectorMode = getToggledDetectorMode(detectorMode);
+	if (hasDetectorReachedAnyEdge(detectorOneX, detectorOneWidth, windowWidth, detectorOneMode, detectorOneSpeed)) {
+		detectorOneMode = getToggledDetectorMode(detectorOneMode);
 	}
 
-	detectorX = getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode);
+	if (hasDetectorReachedAnyEdge(detectorTwoX, detectorTwoWidth, windowWidth, detectorTwoMode, detectorTwoSpeed)) {
+		detectorTwoMode = getToggledDetectorMode(detectorTwoMode);
+	}
 
-	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldOneX, particleFieldOneWidth) || areParticlesOverlapping(detectorX, detectorWidth, particleFieldTwoX, particleFieldTwoWidth);
+	detectorOneX = getDetectorNextX(detectorOneX, detectorOneWidth, windowWidth, detectorOneMode, detectorOneSpeed);
+	detectorTwoX = getDetectorNextX(detectorTwoX, detectorTwoWidth, windowWidth, detectorTwoMode, detectorTwoSpeed);
+
+	areParticlesOverlappingDetectorOne = areParticlesOverlapping(detectorOneX, detectorOneWidth, particleFieldOneX, particleFieldOneWidth) || areParticlesOverlapping(detectorOneX, detectorOneWidth, particleFieldTwoX, particleFieldTwoWidth);
+	areParticlesOverlappingDetectorTwo = areParticlesOverlapping(detectorTwoX, detectorTwoWidth, particleFieldOneX, particleFieldOneWidth) || areParticlesOverlapping(detectorTwoX, detectorTwoWidth, particleFieldTwoX, particleFieldTwoWidth);
 }
 
 function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
 	return areParticlesOverlappingEachother ? r.RED : r.WHITE;
 }
 
-function drawDetector() {
+function drawDetectors() {
 	const detectorY = 0;
-	r.DrawRectangle(detectorX, detectorY, detectorWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother));
+
+	r.DrawRectangle(detectorOneX, detectorY, detectorOneWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingDetectorOne));
+
+	r.DrawRectangle(detectorTwoX, detectorY, detectorOneWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingDetectorTwo));
 }
 
 function drawParticleFields() {
@@ -133,7 +148,7 @@ function draw() {
 
 	drawParticleFields();
 
-	drawDetector();
+	drawDetectors();
 
 	r.EndDrawing();
 }
