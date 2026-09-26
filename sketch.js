@@ -17,6 +17,8 @@ let detectorX = 0;
 
 const detectorWidth = 50;
 
+const detectorSpeed = 1;
+
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
@@ -85,19 +87,20 @@ function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, parti
 
 function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode) {
 	let detectorNextX;
+
 	if (!hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) && detectorMode === SCAN_RIGHT) {
-		detectorNextX = detectorX + 1;
+		detectorNextX = detectorX + detectorSpeed;
 	}
 
 	if (!hasDetectorReachedLeftEdge(detectorX, detectorMode) && detectorMode === SCAN_LEFT) {
-		detectorNextX = detectorX - 1;
+		detectorNextX = detectorX - detectorSpeed;
 	}
 
 	return detectorNextX;
 }
 
 function update() {
-	if (hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode)) {
+	if (hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode, detectorSpeed)) {
 		detectorMode = getToggledDetectorMode(detectorMode);
 	}
 
