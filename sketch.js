@@ -4,7 +4,7 @@ const windowWidth = 800;
 const windowHeight = 600;
 const windowTitle = "Particle Detector";
 
-const FPS = 60;
+const FPS = 120;
 
 function running() { return !r.WindowShouldClose(); }
 
