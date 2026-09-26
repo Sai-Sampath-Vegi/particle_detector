@@ -55,8 +55,8 @@ function areParticleEdgesOverlapping(particleOneX, particleTwoLeftEdgeX, particl
 	return ((particleOneX >= particleTwoLeftEdgeX) && (particleOneX <= particleTwoRightEdgeX));
 }
 
-function isNotOverlapping(particleOneLeftEdgeX, particleOneRightEdgeX, particleTwoLeftX, particleTwoRightX) {
-	return !areParticleEdgesOverlapping(particleOneLeftEdgeX, particleTwoLeftX, particleTwoRightX) && !areParticleEdgesOverlapping(particleOneRightEdgeX, particleTwoLeftX, particleTwoRightX);
+function isOverlapping(particleOneLeftEdgeX, particleOneRightEdgeX, particleTwoLeftX, particleTwoRightX) {
+	return (areParticleEdgesOverlapping(particleOneLeftEdgeX, particleTwoLeftX, particleTwoRightX) || areParticleEdgesOverlapping(particleOneRightEdgeX, particleTwoLeftX, particleTwoRightX));
 }
 
 function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, particleFieldWidth) {
@@ -69,11 +69,11 @@ function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, parti
 	const particleFieldRightX = getParticleRightEdgeX(particleFieldX, particleFieldWidth);
 
 	if (particleFieldWidth >= detectorWidth) {
-		if (isNotOverlapping(detectorLeftEdgeX, detectorRightEdgeX, particleFieldLeftX, particleFieldRightX)) {
+		if (!isOverlapping(detectorLeftEdgeX, detectorRightEdgeX, particleFieldLeftX, particleFieldRightX)) {
 			particlesOverlapping = false;
 		}
 	} else {
-		if (isNotOverlapping(particleFieldLeftX, particleFieldRightX, detectorLeftEdgeX, detectorRightEdgeX)) {
+		if (!isOverlapping(particleFieldLeftX, particleFieldRightX, detectorLeftEdgeX, detectorRightEdgeX)) {
 			particlesOverlapping = false;
 		}
 	}
