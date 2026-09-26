@@ -27,9 +27,6 @@ let detectorTwoX = detectorTwoLeftRangeX;
 const detectorOneWidth = 50;
 const detectorTwoWidth = 50;
 
-const detectorOneSpeed = 1;
-const detectorTwoSpeed = 2;
-
 const SCAN_LEFT = "SCAN LEFT REGION";
 const SCAN_RIGHT = "SCAN RIGHT REGION";
 
@@ -114,6 +111,9 @@ function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode, d
 }
 
 function update() {
+	const detectorOneSpeed = 1;
+	const detectorTwoSpeed = 2;
+
 	if (hasDetectorReachedAnyEdge(detectorOneX, detectorOneWidth, detectorOneLeftRangeX, detectorOneRightRangeX, detectorOneMode, detectorOneSpeed)) {
 		detectorOneMode = getToggledDetectorMode(detectorOneMode);
 	}
