@@ -83,18 +83,25 @@ function areParticlesOverlapping(detectorX, detectorWidth, particleFieldX, parti
 	return particlesOverlapping;
 }
 
+function getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode) {
+	let detectorNextX;
+	if (!hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) && detectorMode === SCAN_RIGHT) {
+		detectorNextX = detectorX + 1;
+	}
+
+	if (!hasDetectorReachedLeftEdge(detectorX, detectorMode) && detectorMode === SCAN_LEFT) {
+		detectorNextX = detectorX - 1;
+	}
+
+	return detectorNextX;
+}
+
 function update() {
 	if (hasDetectorReachedAnyEdge(detectorX, detectorWidth, windowWidth, detectorMode)) {
 		detectorMode = getToggledDetectorMode(detectorMode);
 	}
 
-	if (!hasDetectorReachedRightEdge(detectorX, detectorWidth, windowWidth, detectorMode) && detectorMode === SCAN_RIGHT) {
-		detectorX++;
-	}
-
-	if (!hasDetectorReachedLeftEdge(detectorX, detectorMode) && detectorMode === SCAN_LEFT) {
-		detectorX--;
-	}
+	detectorX = getDetectorNextX(detectorX, detectorWidth, windowWidth, detectorMode);
 
 	areParticlesOverlappingEachother = areParticlesOverlapping(detectorX, detectorWidth, particleFieldOneX, particleFieldOneWidth) || areParticlesOverlapping(detectorX, detectorWidth, particleFieldTwoX, particleFieldTwoWidth);
 }
