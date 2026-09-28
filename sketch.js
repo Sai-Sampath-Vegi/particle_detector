@@ -19,18 +19,21 @@ function init() {
 	d1.start = d1.leftRange;
 	d1.width = 50;
 	d1.velocity = 1;
+	d1.particlesOverlapping = false;
 
 	d2.leftRange = r.GetScreenWidth() / 2;
 	d2.rightRange = r.GetScreenWidth();
 	d2.start = d2.leftRange;
 	d2.width = 50;
 	d2.velocity = 2;
+	d2.particlesOverlapping = false;
 
 	d3.leftRange = 0;
 	d3.rightRange = r.GetScreenHeight();
 	d3.start = d3.leftRange;
 	d3.width = 50;
 	d3.velocity = 1;
+	d3.particlesOverlapping = false;
 
 	f1.start = 400;
 	f1.width = 100;
