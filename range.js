@@ -1,7 +1,3 @@
-function getRangeLeftEdge(start) {
-	return start;
-}
-
 function getRangeRightEdge(start, width) {
 	return start + width;
 }
