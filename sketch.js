@@ -3,13 +3,13 @@ const r = require("raylib");
 const range = require("./range");
 const detector = require("./detector");
 
-const d1 = require("./d1");
-const d2 = require("./d2");
-const d3 = require("./d3");
+const d1 = {};
+const d2 = {};
+const d3 = {};
 
-const f1 = require("./f1");
-const f2 = require("./f2");
-const f3 = require("./f3");
+const f1 = {};
+const f2 = {};
+const f3 = {};
 
 function running() { return !r.WindowShouldClose(); }
 
