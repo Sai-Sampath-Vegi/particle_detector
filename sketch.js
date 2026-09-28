@@ -9,6 +9,7 @@ const FPS = 120;
 function running() { return !r.WindowShouldClose(); }
 
 function setup() {
+	r.SetTraceLogLevel(r.LOG_NONE);
 	r.InitWindow(windowWidth, windowHeight, windowTitle);
 	r.SetTargetFPS(FPS);
 }
