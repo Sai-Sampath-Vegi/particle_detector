@@ -1,5 +1,9 @@
 const sketch = require("./sketch");
 
+const WIDTH = 800;
+const HEIGHT = 600;
+const TITLE = "Particle Detector";
+
 function loop() {
 	while (sketch.running()) {
 		sketch.update();
@@ -8,7 +12,7 @@ function loop() {
 }
 
 function main() {
-	sketch.setup();
+	sketch.setup(WIDTH, HEIGHT, TITLE);
 	loop();
 	sketch.teardown();
 }

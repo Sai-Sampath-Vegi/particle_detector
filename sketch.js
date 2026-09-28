@@ -1,180 +1,109 @@
 const r = require("raylib");
 
-const windowWidth = 800;
-const windowHeight = 600;
-const windowTitle = "Particle Detector";
+const range = require("./range");
+const detector = require("./detector");
 
-const FPS = 120;
+const d1 = require("./d1");
+const d2 = require("./d2");
+const d3 = require("./d3");
+
+const f2 = require("./f2");
+const f1 = require("./f1");
+const f3 = require("./f3");
 
 function running() { return !r.WindowShouldClose(); }
 
-function setup() {
+function init() {
+	d1.leftRange = 0;
+	d1.rightRange = r.GetScreenWidth() / 2;
+	d1.start = d1.leftRange;
+	d1.width = 50;
+	d1.velocity = 1;
+
+	d2.leftRange = r.GetScreenWidth() / 2;
+	d2.rightRange = r.GetScreenWidth();
+	d2.start = d2.leftRange;
+	d2.width = 50;
+	d2.velocity = 2;
+
+	d3.leftRange = 0;
+	d3.rightRange = r.GetScreenHeight();
+	d3.start = d3.leftRange;
+	d3.width = 50;
+	d3.velocity = 1;
+
+	f1.start = 400;
+	f1.width = 100;
+
+	f2.start = 600;
+	f2.width = 10;
+
+	f3.start = 300;
+	f3.width = 30;
+}
+
+function setup(width, height, title) {
 	r.SetTraceLogLevel(r.LOG_NONE);
-	r.InitWindow(windowWidth, windowHeight, windowTitle);
-	r.SetTargetFPS(FPS);
+	r.InitWindow(width, height, title);
+	r.SetTargetFPS(120);
+
+	init();
 }
 
-function getHalf(x) { return x / 2; }
-
-const detectorOneLeftRangeX = 0;
-const detectorOneRightRangeX = getHalf(windowWidth);
-
-const detectorTwoLeftRangeX = getHalf(windowWidth);
-const detectorTwoRightRangeX = windowWidth;
-
-const detectorThreeLeftRangeY = 0;
-const detectorThreeRightRangeY = windowHeight;
-
-let detectorOneX = detectorOneLeftRangeX;
-let detectorTwoX = detectorTwoLeftRangeX;
-let detectorThreeY = detectorThreeLeftRangeY;
-
-const detectorOneWidth = 50;
-const detectorTwoWidth = 50;
-
-const detectorThreeWidth = windowWidth;
-const detectorThreeHeight = 20;
-
-const particleFieldColor = r.BLUE;
-
-const SCAN_LEFT = "SCAN LEFT REGION";
-const SCAN_RIGHT = "SCAN RIGHT REGION";
-
-const particleFieldOneWidth = 100;
-const particleFieldOneX = getHalf(windowWidth) - particleFieldOneWidth;
-
-const particleFieldTwoWidth = 10;
-const particleFieldTwoX = getHalf(windowWidth) + particleFieldOneWidth;
-
-const particleFieldThreeHeight = 10;
-const particleFieldThreeY = getHalf(windowHeight) - particleFieldThreeHeight;
-
-let detectorOneMode = SCAN_RIGHT;
-let detectorTwoMode = SCAN_RIGHT;
-let detectorThreeMode = SCAN_RIGHT;
-
-let areParticlesOverlappingDetectorOne = false;
-let areParticlesOverlappingDetectorTwo = false;
-let areParticlesOverlappingDetectorThree = false;
-
-function hasDetectorReachedLeftEdge(detectorLeft, detectorLeftRange, detectorMode, detectorSpeed) {
-	return ((detectorMode === SCAN_LEFT) && ((detectorLeft - detectorLeftRange) <= detectorSpeed));
-}
-
-function hasDetectorReachedRightEdge(detectorLeft, detectorWidth, detectorRightRange, detectorMode, detectorSpeed) {
-	return ((detectorMode === SCAN_RIGHT) && ((detectorRightRange - (detectorLeft + detectorWidth)) <= detectorSpeed));
-}
-
-function getToggledDetectorMode(detectorMode) {
-	return detectorMode === SCAN_LEFT ? SCAN_RIGHT : SCAN_LEFT;
-}
-
-function hasDetectorReachedAnyEdge(detectorLeft, detectorWidth, detectorLeftRange, detectorRightRange, detectorMode, detectorSpeed) {
-	return hasDetectorReachedRightEdge(detectorLeft, detectorWidth, detectorRightRange, detectorMode, detectorSpeed) || hasDetectorReachedLeftEdge(detectorLeft, detectorLeftRange, detectorMode, detectorSpeed);
-}
-
-function getRangeLeftEdge(particleLeft) {
-	return particleLeft;
-}
-
-function getRangeRightEdge(particleLeft, particleWidth) {
-	return particleLeft + particleWidth;
-}
-
-function areRangeEdgesOverlapping(rangeOneLeft, rangeTwoLeftEdge, rangeTwoRightEdge) {
-	return ((rangeOneLeft >= rangeTwoLeftEdge) && (rangeOneLeft <= rangeTwoRightEdge));
-}
-
-function isOverlapping(rangeOneLeftEdge, rangeOneRightEdge, rangeTwoLeft, rangeTwoRight) {
-	return (areRangeEdgesOverlapping(rangeOneLeftEdge, rangeTwoLeft, rangeTwoRight) || areRangeEdgesOverlapping(rangeOneRightEdge, rangeTwoLeft, rangeTwoRight));
-}
-
-function areRangesOverlapping(rangeOneLeft, rangeOneWidth, rangeTwoLeft, rangeTwoWidth) {
-	let rangesOverlapping = true;
-
-	const rangeOneLeftEdge = getRangeLeftEdge(rangeOneLeft);
-	const rangeOneRightEdge = getRangeRightEdge(rangeOneLeft, rangeOneWidth);
-
-	const rangeTwoLeftEdge = getRangeLeftEdge(rangeTwoLeft);
-	const rangeTwoRightEdge = getRangeRightEdge(rangeTwoLeft, rangeTwoWidth);
-
-	if (rangeTwoWidth >= rangeOneWidth) {
-		if (!isOverlapping(rangeOneLeftEdge, rangeOneRightEdge, rangeTwoLeftEdge, rangeTwoRightEdge)) {
-			rangesOverlapping = false;
-		}
-	} else {
-		if (!isOverlapping(rangeTwoLeftEdge, rangeTwoRightEdge, rangeOneLeftEdge, rangeOneRightEdge)) {
-			rangesOverlapping = false;
-		}
-	}
-
-	return rangesOverlapping;
-}
-
-function getDetectorNextPosition(detectorLeft, detectorWidth, windowWidth, detectorMode, detectorSpeed) {
-	let detectorNextPosition;
-
-	if (!hasDetectorReachedRightEdge(detectorLeft, detectorWidth, windowWidth, detectorMode) && detectorMode === SCAN_RIGHT) {
-		detectorNextPosition = detectorLeft + detectorSpeed;
-	}
-
-	if (!hasDetectorReachedLeftEdge(detectorLeft, detectorMode) && detectorMode === SCAN_LEFT) {
-		detectorNextPosition = detectorLeft - detectorSpeed;
-	}
-
-	return detectorNextPosition;
+function updateDetector(d, f1, f2) {
+	d.start = detector.getNextPosition(d.start, d.velocity);
+	d.velocity =
+		detector.toggleDetectorMode(d.start, d.width, d.leftRange, d.rightRange, d.velocity);
+	d.particlesOverlapping =
+		f1 && range.isOverlapping(d.start, d.width, f1.start, f1.width) ||
+		f2 && range.isOverlapping(d.start, d.width, f2.start, f2.width);
 }
 
 function update() {
-	const detectorOneSpeed = 1;
-	const detectorTwoSpeed = 2;
-	const detectorThreeSpeed = 1;
+	updateDetector(d1, f1, f2);
 
-	if (hasDetectorReachedAnyEdge(detectorOneX, detectorOneWidth, detectorOneLeftRangeX, detectorOneRightRangeX, detectorOneMode, detectorOneSpeed)) {
-		detectorOneMode = getToggledDetectorMode(detectorOneMode);
-	}
+	updateDetector(d2, f1, f2);
 
-	if (hasDetectorReachedAnyEdge(detectorTwoX, detectorTwoWidth, detectorTwoLeftRangeX, detectorTwoRightRangeX, detectorTwoMode, detectorTwoSpeed)) {
-		detectorTwoMode = getToggledDetectorMode(detectorTwoMode);
-	}
-
-	if (hasDetectorReachedAnyEdge(detectorThreeY, detectorThreeHeight, detectorThreeLeftRangeY, detectorThreeRightRangeY, detectorThreeMode, detectorThreeSpeed)) {
-		detectorThreeMode = getToggledDetectorMode(detectorThreeMode);
-	}
-
-	detectorOneX = getDetectorNextPosition(detectorOneX, detectorOneWidth, getHalf(windowWidth), detectorOneMode, detectorOneSpeed);
-	detectorTwoX = getDetectorNextPosition(detectorTwoX, detectorTwoWidth, windowWidth, detectorTwoMode, detectorTwoSpeed);
-	detectorThreeY = getDetectorNextPosition(detectorThreeY, detectorThreeHeight, windowHeight, detectorThreeMode, detectorThreeSpeed);
-
-	areParticlesOverlappingDetectorOne = areRangesOverlapping(detectorOneX, detectorOneWidth, particleFieldOneX, particleFieldOneWidth) || areRangesOverlapping(detectorOneX, detectorOneWidth, particleFieldTwoX, particleFieldTwoWidth);
-	areParticlesOverlappingDetectorTwo = areRangesOverlapping(detectorTwoX, detectorTwoWidth, particleFieldOneX, particleFieldOneWidth) || areRangesOverlapping(detectorTwoX, detectorTwoWidth, particleFieldTwoX, particleFieldTwoWidth);
-	areParticlesOverlappingDetectorThree = areRangesOverlapping(detectorThreeY, detectorThreeHeight, particleFieldThreeY, particleFieldThreeHeight);
+	updateDetector(d3, f3);
 }
 
-function getDetectorColorBasedOnOverlapping(areParticlesOverlappingEachother) {
-	return areParticlesOverlappingEachother ? r.RED : r.WHITE;
+function drawVerticalDetectors() {
+	const detectorY = 0;
+
+	r.DrawRectangle(d1.start, detectorY, d1.width, r.GetScreenHeight(), detector.getDetectorColor(r, d1.particlesOverlapping));
+	r.DrawRectangle(d2.start, detectorY, d2.width, r.GetScreenHeight(), detector.getDetectorColor(r, d2.particlesOverlapping));
+}
+
+function drawHorizontalDetectors() {
+	const detectorX = 0;
+
+	r.DrawRectangle(detectorX, d3.start, r.GetScreenWidth(), d3.width, detector.getDetectorColor(r, d3.particlesOverlapping));
 }
 
 function drawDetectors() {
-	const detectorX = 0;
-	const detectorY = 0;
+	drawVerticalDetectors();
 
-	r.DrawRectangle(detectorOneX, detectorY, detectorOneWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingDetectorOne));
+	drawHorizontalDetectors();
+}
 
-	r.DrawRectangle(detectorTwoX, detectorY, detectorTwoWidth, windowHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingDetectorTwo));
+function drawVerticalParticalFields() {
+	const particalFieldsY = 0;
 
-	r.DrawRectangle(detectorX, detectorThreeY, detectorThreeWidth, detectorThreeHeight, getDetectorColorBasedOnOverlapping(areParticlesOverlappingDetectorThree));
+	r.DrawRectangle(f1.start, particalFieldsY, f1.width, r.GetScreenHeight(), r.BLUE);
+
+	r.DrawRectangle(f2.start, particalFieldsY, f2.width, r.GetScreenHeight(), r.BLUE);
+}
+
+function drawHorizontalParticalFields() {
+	const particalFieldsX = 0;
+
+	r.DrawRectangle(particalFieldsX, f3.start, r.GetScreenWidth(), f3.width, r.BLUE);
 }
 
 function drawParticleFields() {
-	const particleFieldX = 0;
-	const particleFieldY = 0;
+	drawVerticalParticalFields();
 
-	r.DrawRectangle(particleFieldOneX, particleFieldY, particleFieldOneWidth, windowHeight, particleFieldColor);
-
-	r.DrawRectangle(particleFieldTwoX, particleFieldY, particleFieldTwoWidth, windowHeight, particleFieldColor);
-
-	r.DrawRectangle(particleFieldX, particleFieldThreeY, windowWidth, particleFieldThreeHeight, particleFieldColor);
+	drawHorizontalParticalFields();
 }
 
 function draw() {
