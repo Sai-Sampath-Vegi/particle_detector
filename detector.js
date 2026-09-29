@@ -1,17 +1,17 @@
-function hasDetectorReachedAnyEdge(start, width, leftRange, rightRange) {
-	return ((rightRange - (start + width)) === 0 || (start - leftRange) === 0);
+function hasDetectorReachedAnyEdge(detector) {
+	return ((detector.rightRange - (detector.start + detector.width)) === 0 || (detector.start - detector.leftRange) === 0);
 }
 
-function toggleDetectorMode(start, width, leftRange, rightRange, velocity) {
-	return hasDetectorReachedAnyEdge(start, width, leftRange, rightRange) ? -velocity : velocity;
+function toggleDetectorMode(detector) {
+	return hasDetectorReachedAnyEdge(detector) ? -detector.velocity : detector.velocity;
 }
 
-function getNextPosition(start, velocity) {
-	return start + velocity;
+function getNextPosition(detector) {
+	return detector.start + detector.velocity;
 }
 
-function getDetectorColor(r, particlesOverlapping) {
-	return particlesOverlapping ? r.RED : r.WHITE;
+function getDetectorColor(raylib, particlesOverlapping) {
+	return particlesOverlapping ? raylib.RED : raylib.WHITE;
 }
 
 module.exports = {

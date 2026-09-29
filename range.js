@@ -1,12 +1,12 @@
-function getRangeRightEdge(start, width) {
-	return start + width;
+function getRangeRightEdge(range) {
+	return range.start + range.width;
 }
 
-function isOverlapping(rangeOneStart, rangeOneWidth, rangeTwoStart, rangeTwoWidth) {
-	const rangeOneRight = getRangeRightEdge(rangeOneStart, rangeOneWidth);
-	const rangeTwoRight = getRangeRightEdge(rangeTwoStart, rangeTwoWidth);
+function isOverlapping(rangeOne, rangeTwo) {
+	const rangeOneRight = getRangeRightEdge(rangeOne);
+	const rangeTwoRight = getRangeRightEdge(rangeTwo);
 
-	return !((rangeOneStart > rangeTwoRight) || (rangeOneRight <= rangeTwoStart));
+	return !((rangeOne.start > rangeTwoRight) || (rangeOneRight <= rangeTwo.start));
 }
 
 module.exports = {

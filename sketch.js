@@ -54,12 +54,12 @@ function setup(width, height, title) {
 }
 
 function updateDetector(d, f1, f2) {
-	d.start = detector.getNextPosition(d.start, d.velocity);
+	d.start = detector.getNextPosition(d);
 	d.velocity =
-		detector.toggleDetectorMode(d.start, d.width, d.leftRange, d.rightRange, d.velocity);
+		detector.toggleDetectorMode(d);
 	d.particlesOverlapping =
-		f1 && range.isOverlapping(d.start, d.width, f1.start, f1.width) ||
-		f2 && range.isOverlapping(d.start, d.width, f2.start, f2.width);
+		f1 && range.isOverlapping(d, f1) ||
+		f2 && range.isOverlapping(d, f2);
 }
 
 function update() {
