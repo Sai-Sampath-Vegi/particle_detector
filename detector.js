@@ -11,7 +11,7 @@ function getNextPosition(detector) {
 }
 
 function getDetectorColor(raylib, particlesOverlapping) {
-	return particlesOverlapping ? raylib.RED : raylib.WHITE;
+	return particlesOverlapping ? raylib.ColorAlpha(raylib.RED, 0.5) : raylib.ColorAlpha(raylib.WHITE, 0.7);
 }
 
 module.exports = {
