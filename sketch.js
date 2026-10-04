@@ -11,13 +11,39 @@ function init() {
   world.detectors = {};
   world.fields = {};
 
-  world.detectors.d1 = detector.createDetector(0, 50, r.GetScreenHeight(), 1, r.GetScreenWidth() / 2, detector.VERTICAL);
-  world.detectors.d2 = detector.createDetector(r.GetScreenWidth() / 2, 50, r.GetScreenHeight(), 2, r.GetScreenWidth(), detector.VERTICAL);
-  world.detectors.d3 = detector.createDetector(0, r.GetScreenWidth(), 50, 1, r.GetScreenHeight(), detector.HORIZONTAL);
+  world.detectors.d1 = detector.createDetector(
+    0,
+    50,
+    r.GetScreenHeight(),
+    1,
+    r.GetScreenWidth() / 2,
+    detector.VERTICAL
+  );
 
-  world.fields.f1 = range.createRange(350, 100, r.GetScreenHeight(), range.VERTICAL);
-  world.fields.f2 = range.createRange(600, 10, r.GetScreenHeight(), range.VERTICAL);
-  world.fields.f3 = range.createRange(300, r.GetScreenWidth(), 30, range.HORIZONTAL);
+  world.detectors.d2 = detector.createDetector(
+    r.GetScreenWidth() / 2,
+    50,
+    r.GetScreenHeight(),
+    2,
+    r.GetScreenWidth(),
+    detector.VERTICAL
+  );
+
+  world.detectors.d3 = detector.createDetector(
+    0,
+    r.GetScreenWidth(),
+    50,
+    1,
+    r.GetScreenHeight(),
+    detector.HORIZONTAL
+  );
+
+  world.fields.f1 =
+    range.createRange(350, 100, r.GetScreenHeight(), range.VERTICAL);
+  world.fields.f2 =
+    range.createRange(600, 10, r.GetScreenHeight(), range.VERTICAL);
+  world.fields.f3 =
+    range.createRange(300, r.GetScreenWidth(), 30, range.HORIZONTAL);
 
   return world;
 }
