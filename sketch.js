@@ -53,21 +53,12 @@ function setup(width, height, title) {
   init();
 }
 
-function updateDetector(d, f1, f2) {
-  d.start = detector.getNextPosition(d);
-  d.velocity =
-    detector.toggleDetectorMode(d);
-  d.particlesOverlapping =
-    f1 && range.isOverlapping(d, f1) ||
-    f2 && range.isOverlapping(d, f2);
-}
-
 function update() {
-  updateDetector(d1, f1, f2);
+  detector.update(d1, f1, f2);
 
-  updateDetector(d2, f1, f2);
+  detector.update(d2, f1, f2);
 
-  updateDetector(d3, f3);
+  detector.update(d3, f3);
 }
 
 function drawVerticalDetectors() {

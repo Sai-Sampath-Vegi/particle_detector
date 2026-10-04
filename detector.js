@@ -26,5 +26,5 @@ function update(d, f1, f2) {
 }
 
 module.exports = {
-  hasDetectorReachedAnyEdge, updateDetector: update, toggleDetectorMode, getNextPosition, getDetectorColor,
+  hasDetectorReachedAnyEdge, update, toggleDetectorMode, getNextPosition, getDetectorColor,
 };
