@@ -4,16 +4,20 @@ const WIDTH = 800;
 const HEIGHT = 600;
 const TITLE = "Particle Detector";
 
-function loop() {
+function loop(world) {
   while (sketch.running()) {
-    sketch.update();
-    sketch.draw();
+    world = sketch.update(world);
+    world = sketch.draw(world);
   }
+
+  return world;
 }
 
 function main() {
-  sketch.setup(WIDTH, HEIGHT, TITLE);
-  loop();
+  let world = sketch.setup(WIDTH, HEIGHT, TITLE);
+
+  world = loop(world);
+
   sketch.teardown();
 }
 

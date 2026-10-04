@@ -5,14 +5,18 @@ const VERTICAL = 0;
 const HORIZONTAL = 1;
 
 function hasDetectorReachedAnyEdge(d) {
-  const dStart = (d.direction === HORIZONTAL ? d.y : d.x);
-  const dLength = (d.direction === HORIZONTAL ? d.height : d.width)
+  const dStart =
+    (d.direction === HORIZONTAL ? d.y : d.x);
+  const dLength =
+    (d.direction === HORIZONTAL ? d.height : d.width)
 
   return ((dStart + dLength) >= d.end) || (dStart <= d.start);
 }
 
 function toggleDetectorMode(d) {
-  return hasDetectorReachedAnyEdge(d) ? -d.velocity : d.velocity;
+  return hasDetectorReachedAnyEdge(d) ?
+    -d.velocity :
+    d.velocity;
 }
 
 function getNextPosition(d) {
@@ -20,7 +24,9 @@ function getNextPosition(d) {
 }
 
 function getDetectorColor(d) {
-  return d.particlesOverlapping ? r.ColorAlpha(r.RED, 0.5) : r.ColorAlpha(r.WHITE, 0.7);
+  return d.particlesOverlapping ?
+    r.ColorAlpha(r.RED, 0.5) :
+    r.ColorAlpha(r.WHITE, 0.7);
 }
 
 function createDetector(start, width, height, velocity, end, direction) {
@@ -37,34 +43,49 @@ function createDetector(start, width, height, velocity, end, direction) {
   };
 }
 
-function update(d, f1, f2) {
+function updateDetector(d, f1, f2) {
   if (d.direction === VERTICAL) { d.x = getNextPosition(d); }
   if (d.direction === HORIZONTAL) { d.y = getNextPosition(d); }
+
   d.velocity =
     toggleDetectorMode(d);
+
   d.particlesOverlapping =
     Boolean(f1) && range.isOverlapping(d, f1) ||
     Boolean(f2) && range.isOverlapping(d, f2);
+
+  return d;
+}
+
+function update(world) {
+  world.detectors.d1 =
+    updateDetector(world.detectors.d1, world.fields.f1, world.fields.f2);
+  world.detectors.d2 =
+    updateDetector(world.detectors.d2, world.fields.f1, world.fields.f2);
+  world.detectors.d3 =
+    updateDetector(world.detectors.d3, world.fields.f3);
+
+  return world;
 }
 
 function drawDetector(d) {
   r.DrawRectangleRec(d, getDetectorColor(d));
+
+  return d;
 }
 
 function draw(world) {
-  drawDetector(world.d1);
-  drawDetector(world.d2);
-  drawDetector(world.d3);
+  drawDetector(world.detectors.d1);
+  drawDetector(world.detectors.d2);
+  drawDetector(world.detectors.d3);
+
+  return world;
 }
 
 module.exports = {
   VERTICAL,
   HORIZONTAL,
-  hasDetectorReachedAnyEdge,
   createDetector,
   update,
   draw,
-  toggleDetectorMode,
-  getNextPosition,
-  getDetectorColor,
 };

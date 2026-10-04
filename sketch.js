@@ -3,24 +3,23 @@ const r = require("raylib");
 const range = require("./range");
 const detector = require("./detector");
 
-let d1;
-let d2;
-let d3;
-
-let f1;
-let f2;
-let f3;
-
 function running() { return !r.WindowShouldClose(); }
 
 function init() {
-  d1 = detector.createDetector(0, 50, r.GetScreenHeight(), 1, r.GetScreenWidth() / 2, detector.VERTICAL);
-  d2 = detector.createDetector(r.GetScreenWidth() / 2, 50, r.GetScreenHeight(), 2, r.GetScreenWidth(), detector.VERTICAL);
-  d3 = detector.createDetector(0, r.GetScreenWidth(), 50, 1, r.GetScreenHeight(), detector.HORIZONTAL);
+  const world = {};
 
-  f1 = range.createRange(350, 100, r.GetScreenHeight(), range.VERTICAL);
-  f2 = range.createRange(600, 10, r.GetScreenHeight(), range.VERTICAL);
-  f3 = range.createRange(300, r.GetScreenWidth(), 30, range.HORIZONTAL);
+  world.detectors = {};
+  world.fields = {};
+
+  world.detectors.d1 = detector.createDetector(0, 50, r.GetScreenHeight(), 1, r.GetScreenWidth() / 2, detector.VERTICAL);
+  world.detectors.d2 = detector.createDetector(r.GetScreenWidth() / 2, 50, r.GetScreenHeight(), 2, r.GetScreenWidth(), detector.VERTICAL);
+  world.detectors.d3 = detector.createDetector(0, r.GetScreenWidth(), 50, 1, r.GetScreenHeight(), detector.HORIZONTAL);
+
+  world.fields.f1 = range.createRange(350, 100, r.GetScreenHeight(), range.VERTICAL);
+  world.fields.f2 = range.createRange(600, 10, r.GetScreenHeight(), range.VERTICAL);
+  world.fields.f3 = range.createRange(300, r.GetScreenWidth(), 30, range.HORIZONTAL);
+
+  return world;
 }
 
 function setup(width, height, title) {
@@ -28,27 +27,28 @@ function setup(width, height, title) {
   r.InitWindow(width, height, title);
   r.SetTargetFPS(120);
 
-  init();
+  const world = init();
+
+  return world;
 }
 
-function update() {
-  detector.update(d1, f1, f2);
+function update(world) {
+  world = detector.update(world);
 
-  detector.update(d2, f1, f2);
-
-  detector.update(d3, f3);
+  return world;
 }
 
-function draw() {
+function draw(world) {
   r.BeginDrawing();
 
   r.ClearBackground(r.BLACK);
 
-  range.draw({ f1, f2, f3 });
-
-  detector.draw({ d1, d2, d3 });
+  range.draw(world);
+  detector.draw(world);
 
   r.EndDrawing();
+
+  return world;
 }
 
 function teardown() { r.CloseWindow(); }
