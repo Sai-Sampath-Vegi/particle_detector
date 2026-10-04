@@ -5,16 +5,16 @@ const HEIGHT = 600;
 const TITLE = "Particle Detector";
 
 function loop() {
-	while (sketch.running()) {
-		sketch.update();
-		sketch.draw();
-	}
+  while (sketch.running()) {
+    sketch.update();
+    sketch.draw();
+  }
 }
 
 function main() {
-	sketch.setup(WIDTH, HEIGHT, TITLE);
-	loop();
-	sketch.teardown();
+  sketch.setup(WIDTH, HEIGHT, TITLE);
+  loop();
+  sketch.teardown();
 }
 
 main();
