@@ -45,7 +45,6 @@ function update(d, f1, f2) {
   d.particlesOverlapping =
     Boolean(f1) && range.isOverlapping(d, f1) ||
     Boolean(f2) && range.isOverlapping(d, f2);
-  // if (d.direction === HORIZONTAL) console.log(d.particlesOverlapping, Boolean(f1) && range.isOverlapping(d, f1), Boolean(f2) && range.isOverlapping(d, f2));
 }
 
 function draw(d) {
