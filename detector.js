@@ -1,3 +1,4 @@
+const raylib = require("raylib");
 const range = require("./range");
 
 function hasDetectorReachedAnyEdge(detector) {
@@ -12,7 +13,7 @@ function getNextPosition(detector) {
   return detector.start + detector.velocity;
 }
 
-function getDetectorColor(raylib, particlesOverlapping) {
+function getDetectorColor(particlesOverlapping) {
   return particlesOverlapping ? raylib.ColorAlpha(raylib.RED, 0.5) : raylib.ColorAlpha(raylib.WHITE, 0.7);
 }
 

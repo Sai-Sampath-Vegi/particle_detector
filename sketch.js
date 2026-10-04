@@ -64,14 +64,14 @@ function update() {
 function drawVerticalDetectors() {
   const detectorY = 0;
 
-  r.DrawRectangle(d1.start, detectorY, d1.width, r.GetScreenHeight(), detector.getDetectorColor(r, d1.particlesOverlapping));
-  r.DrawRectangle(d2.start, detectorY, d2.width, r.GetScreenHeight(), detector.getDetectorColor(r, d2.particlesOverlapping));
+  r.DrawRectangle(d1.start, detectorY, d1.width, r.GetScreenHeight(), detector.getDetectorColor(d1.particlesOverlapping));
+  r.DrawRectangle(d2.start, detectorY, d2.width, r.GetScreenHeight(), detector.getDetectorColor(d2.particlesOverlapping));
 }
 
 function drawHorizontalDetectors() {
   const detectorX = 0;
 
-  r.DrawRectangle(detectorX, d3.start, r.GetScreenWidth(), d3.width, detector.getDetectorColor(r, d3.particlesOverlapping));
+  r.DrawRectangle(detectorX, d3.start, r.GetScreenWidth(), d3.width, detector.getDetectorColor(d3.particlesOverlapping));
 }
 
 function drawDetectors() {
