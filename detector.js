@@ -47,8 +47,14 @@ function update(d, f1, f2) {
     Boolean(f2) && range.isOverlapping(d, f2);
 }
 
-function draw(d) {
+function drawDetector(d) {
   r.DrawRectangleRec(d, getDetectorColor(d));
+}
+
+function draw(world) {
+  drawDetector(world.d1);
+  drawDetector(world.d2);
+  drawDetector(world.d3);
 }
 
 module.exports = {

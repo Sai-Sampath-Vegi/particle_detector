@@ -28,8 +28,14 @@ function createRange(start, width, height, direction) {
   };
 }
 
-function draw(range) {
+function drawParticleField(range) {
   r.DrawRectangleRec(range, range.color);
+}
+
+function draw(world) {
+  drawParticleField(world.f1);
+  drawParticleField(world.f2);
+  drawParticleField(world.f3);
 }
 
 module.exports = {

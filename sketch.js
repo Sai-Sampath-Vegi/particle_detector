@@ -39,26 +39,14 @@ function update() {
   detector.update(d3, f3);
 }
 
-function drawDetectors() {
-  detector.draw(d1);
-  detector.draw(d2);
-  detector.draw(d3);
-}
-
-function drawParticleFields() {
-  range.draw(f1);
-  range.draw(f2);
-  range.draw(f3);
-}
-
 function draw() {
   r.BeginDrawing();
 
   r.ClearBackground(r.BLACK);
 
-  drawParticleFields();
+  range.draw({ f1, f2, f3 });
 
-  drawDetectors();
+  detector.draw({ d1, d2, d3 });
 
   r.EndDrawing();
 }
