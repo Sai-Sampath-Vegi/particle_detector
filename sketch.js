@@ -3,46 +3,24 @@ const r = require("raylib");
 const range = require("./range");
 const detector = require("./detector");
 
-const d1 = {};
-const d2 = {};
-const d3 = {};
+let d1;
+let d2;
+let d3;
 
-const f1 = {};
-const f2 = {};
-const f3 = {};
+let f1;
+let f2;
+let f3;
 
 function running() { return !r.WindowShouldClose(); }
 
 function init() {
-  d1.leftRange = 0;
-  d1.rightRange = r.GetScreenWidth() / 2;
-  d1.start = d1.leftRange;
-  d1.width = 50;
-  d1.velocity = 1;
-  d1.particlesOverlapping = false;
+  d1 = detector.createDetector(0, 50, r.GetScreenHeight(), 1, r.GetScreenWidth() / 2, detector.VERTICAL);
+  d2 = detector.createDetector(r.GetScreenWidth() / 2, 50, r.GetScreenHeight(), 2, r.GetScreenWidth(), detector.VERTICAL);
+  d3 = detector.createDetector(0, r.GetScreenWidth(), 50, 1, r.GetScreenHeight(), detector.HORIZONTAL);
 
-  d2.leftRange = r.GetScreenWidth() / 2;
-  d2.rightRange = r.GetScreenWidth();
-  d2.start = d2.leftRange;
-  d2.width = 50;
-  d2.velocity = 2;
-  d2.particlesOverlapping = false;
-
-  d3.leftRange = 0;
-  d3.rightRange = r.GetScreenHeight();
-  d3.start = d3.leftRange;
-  d3.width = 50;
-  d3.velocity = 1;
-  d3.particlesOverlapping = false;
-
-  f1.start = 400;
-  f1.width = 100;
-
-  f2.start = 600;
-  f2.width = 10;
-
-  f3.start = 300;
-  f3.width = 30;
+  f1 = range.createRange(350, 100, r.GetScreenHeight(), range.VERTICAL);
+  f2 = range.createRange(600, 10, r.GetScreenHeight(), range.VERTICAL);
+  f3 = range.createRange(300, r.GetScreenWidth(), 30, range.HORIZONTAL);
 }
 
 function setup(width, height, title) {
@@ -61,43 +39,16 @@ function update() {
   detector.update(d3, f3);
 }
 
-function drawVerticalDetectors() {
-  const detectorY = 0;
-
-  r.DrawRectangle(d1.start, detectorY, d1.width, r.GetScreenHeight(), detector.getDetectorColor(d1.particlesOverlapping));
-  r.DrawRectangle(d2.start, detectorY, d2.width, r.GetScreenHeight(), detector.getDetectorColor(d2.particlesOverlapping));
-}
-
-function drawHorizontalDetectors() {
-  const detectorX = 0;
-
-  r.DrawRectangle(detectorX, d3.start, r.GetScreenWidth(), d3.width, detector.getDetectorColor(d3.particlesOverlapping));
-}
-
 function drawDetectors() {
-  drawVerticalDetectors();
-
-  drawHorizontalDetectors();
-}
-
-function drawVerticalParticalFields() {
-  const particalFieldsY = 0;
-
-  r.DrawRectangle(f1.start, particalFieldsY, f1.width, r.GetScreenHeight(), r.BLUE);
-
-  r.DrawRectangle(f2.start, particalFieldsY, f2.width, r.GetScreenHeight(), r.BLUE);
-}
-
-function drawHorizontalParticalFields() {
-  const particalFieldsX = 0;
-
-  r.DrawRectangle(particalFieldsX, f3.start, r.GetScreenWidth(), f3.width, r.BLUE);
+  detector.draw(d1);
+  detector.draw(d2);
+  detector.draw(d3);
 }
 
 function drawParticleFields() {
-  drawVerticalParticalFields();
-
-  drawHorizontalParticalFields();
+  range.draw(f1);
+  range.draw(f2);
+  range.draw(f3);
 }
 
 function draw() {
